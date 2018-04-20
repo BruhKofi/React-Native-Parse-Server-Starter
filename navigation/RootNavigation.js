@@ -3,24 +3,41 @@ import React from 'react';
 import { StackNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
+import AuthNavigation from './AuthNavigation';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+import { SwitchNavigator } from 'react-navigation';
 
-const RootStackNavigator = StackNavigator(
-  {
-    Main: {
-      screen: MainTabNavigator,
-    },
-  },
-  {
-    navigationOptions: () => ({
-      headerTitleStyle: {
-        fontWeight: 'normal',
+
+createRootNavigator = (signedIn = false) => {
+  return SwitchNavigator(
+    {
+      Main: {
+        screen: MainTabNavigator
       },
-    }),
-  }
-);
+      Auth: {
+        screen: AuthNavigation
+      }
+    },
+    {
+      initialRouteName: signedIn ? 'Main' : 'Auth'
+    },
+    {
+      navigationOptions: () => ({
+        headerTitleStyle: {
+          fontWeight: 'normal',
+        },
+      }),
+    }
+  )
+}
+
+
 
 export default class RootNavigator extends React.Component {
+    state = {
+      signedIn: false
+    }
+
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
@@ -30,7 +47,9 @@ export default class RootNavigator extends React.Component {
   }
 
   render() {
-    return <RootStackNavigator />;
+    const { signedIn } = this.state;
+    const Layout = createRootNavigator(signedIn)
+    return <Layout/>;
   }
 
   _registerForPushNotifications() {
