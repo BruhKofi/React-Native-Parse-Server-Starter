@@ -1,10 +1,56 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { Container, Item, Label, Form, Input, Button, Text } from 'native-base';
+import Parse from 'parse/react-native'
 
 export default class AuthScreen extends Component {
   componentWillMount() {
     console.log('Auth screen mounted');
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirm_password: ''
+    };
+  }
+
+  async signUpUser() {
+    const user = new Parse.User();
+    user.set('username', this.state.email);
+    user.set('FirstName', this.state.FirstName);
+    user.set('LastName', this.state.LastName);
+    user.set('email', this.state.email);
+    user.set('password', this.state.password);
+
+    user.signUp(null, {
+      success: function(user) {
+        // Hooray! Let them use the app now.
+        console.warn("sign up success")
+      },
+      error: function(user, error) {
+        // Show the error message somewhere and let the user try again.
+        alert("Error: " + error.code + " " + error.message);
+      }
+    });
+  }
+
+  async logInUser() {
+    Parse.User.logIn(this.state.email, this.state.password, {
+      success: function(user) {
+        // Do stuff after successful login.
+        console.log(user, "user is here");
+        alert("success")
+      },
+      error: function(user, error) {
+        // The login failed. Check error to see why.
+        alert(error)
+      }
+    });
   }
 
   render() {
@@ -13,28 +59,60 @@ export default class AuthScreen extends Component {
         <Form>
           <Item floatingLabel>
             <Label>Email</Label>
-            <Input autoCapitalize="none" autoCorrect={false} />
+            <Input autoCapitalize="none" autoCorrect={false} onChangeText={email => this.setState({ email })} />
           </Item>
+
+          <Item floatingLabel>
+            <Label>First Name</Label>
+            <Input autoCapitalize="none" autoCorrect={false} onChangeText={firstName => this.setState({ firstName })} />
+          </Item>
+
+          <Item floatingLabel>
+            <Label>Last Name</Label>
+            <Input autoCapitalize="none" autoCorrect={false} onChangeText={lastName => this.setState({ lastName })} />
+          </Item>
+
           <Item floatingLabel>
             <Label>Password</Label>
             <Input
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry={true}
+              onChangeText={password => this.setState({ password })}
             />
           </Item>
+
           <Item floatingLabel>
-            <Label>Email</Label>
+            <Label>Confirm Password</Label>
             <Input
               autoCapitalize="none"
               autoCorrect={false}
               secureTextEntry={true}
+              onChangeText={confirm_password => this.setState({ confirm_password })}
             />
           </Item>
-          <Button style={styles.loginbutton} full rounded success>
+          <Button
+            style={styles.loginbutton}
+            full
+            rounded
+            success
+            onPress={this.logInUser.bind(this)}
+          >
             <Text>Login</Text>
           </Button>
+
+          <Button
+            style={styles.loginbutton}
+            full
+            rounded
+            primary
+            onPress={this.signUpUser.bind(this)}
+          >
+            <Text>Sign Up</Text>
+          </Button>
         </Form>
+
+        <Text>{this.state.password}</Text>
       </Container>
     );
   }
