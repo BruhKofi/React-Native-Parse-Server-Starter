@@ -5,17 +5,26 @@ import { StackNavigator, TabBarBottom, headerStyle } from 'react-navigation';
 
 import Colors from '../constants/Colors';
 
-import AuthScreen from '../screens/AuthScreen';
+import SignUpScreen from '../screens/SignUpScreen';
+import LoginScreen from '../screens/LoginScreen';
 
 export default StackNavigator(
   {
-    Auth: {
-      screen: AuthScreen,
+    Login: {
+      screen: LoginScreen,
       navigationOptions: {
         title: "Login",
         headerStyle
       }
     },
+    SignUp: {
+      screen: SignUpScreen,
+      navigationOptions: {
+        title: "Sign Up",
+        headerStyle
+      }
+    },
+
   },
   {
     navigationOptions: ({ navigation }) => ({

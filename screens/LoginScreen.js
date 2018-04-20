@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import { Container, Item, Label, Form, Input, Button, Text } from 'native-base';
 import Parse from 'parse/react-native'
 
-export default class AuthScreen extends Component {
+export default class LoginScreen extends Component {
   componentWillMount() {
     console.log('Auth screen mounted');
   }
@@ -15,28 +15,8 @@ export default class AuthScreen extends Component {
       lastName: '',
       email: '',
       password: '',
-      confirm_password: ''
+      confirm_password: '',
     };
-  }
-
-  async signUpUser() {
-    const user = new Parse.User();
-    user.set('username', this.state.email);
-    user.set('FirstName', this.state.FirstName);
-    user.set('LastName', this.state.LastName);
-    user.set('email', this.state.email);
-    user.set('password', this.state.password);
-
-    user.signUp(null, {
-      success: function(user) {
-        // Hooray! Let them use the app now.
-        console.warn("sign up success")
-      },
-      error: function(user, error) {
-        // Show the error message somewhere and let the user try again.
-        alert("Error: " + error.code + " " + error.message);
-      }
-    });
   }
 
   async logInUser() {
@@ -54,22 +34,14 @@ export default class AuthScreen extends Component {
   }
 
   render() {
+    const {isRegistered} = this.state
     return (
       <Container style={styles.container}>
+
         <Form>
           <Item floatingLabel>
             <Label>Email</Label>
             <Input autoCapitalize="none" autoCorrect={false} onChangeText={email => this.setState({ email })} />
-          </Item>
-
-          <Item floatingLabel>
-            <Label>First Name</Label>
-            <Input autoCapitalize="none" autoCorrect={false} onChangeText={firstName => this.setState({ firstName })} />
-          </Item>
-
-          <Item floatingLabel>
-            <Label>Last Name</Label>
-            <Input autoCapitalize="none" autoCorrect={false} onChangeText={lastName => this.setState({ lastName })} />
           </Item>
 
           <Item floatingLabel>
@@ -82,15 +54,6 @@ export default class AuthScreen extends Component {
             />
           </Item>
 
-          <Item floatingLabel>
-            <Label>Confirm Password</Label>
-            <Input
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={true}
-              onChangeText={confirm_password => this.setState({ confirm_password })}
-            />
-          </Item>
           <Button
             style={styles.loginbutton}
             full
@@ -101,15 +64,9 @@ export default class AuthScreen extends Component {
             <Text>Login</Text>
           </Button>
 
-          <Button
-            style={styles.loginbutton}
-            full
-            rounded
-            primary
-            onPress={this.signUpUser.bind(this)}
-          >
-            <Text>Sign Up</Text>
-          </Button>
+          <Button style={styles.registerButton} transparent onPress={() =>  this.props.navigation.navigate('SignUp')}>
+          <Text>Register</Text>
+        </Button>
         </Form>
 
         <Text>{this.state.password}</Text>
@@ -127,5 +84,8 @@ const styles = StyleSheet.create({
   },
   loginbutton: {
     margin: 10
+  },
+  registerButton: {
+    alignSelf: 'flex-end',
   }
 });
