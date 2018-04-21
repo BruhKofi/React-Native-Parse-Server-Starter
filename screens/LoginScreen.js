@@ -1,62 +1,78 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { Container, Item, Label, Form, Input, Button, Text } from 'native-base';
-import Parse from 'parse/react-native'
+import Parse from 'parse/react-native';
 
-export default class LoginScreen extends Component {
+class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
       user: null,
+      loggedIn: false
     };
   }
 
   componentWillMount() {
     console.log('Auth screen mounted');
 
-      Parse.User.currentAsync().then(
-        function(user) {
-          const authstatus = user.authenticated();
-          const username = user.getUsername();
-          console.log(user, 'username',  authstatus)
-          user.logIn();
-          this.props.navigation.navigate('Home')
-          return user;
-        }.bind(this)
-      );
+    Parse.User.currentAsync().then(
+      function(user) {
+        const authstatus = user.authenticated();
+        const username = user.getUsername();
+        let sessionToken = user.getSessionToken();
+        console.log(user, 'username', authstatus);
+
+        switch (user) {
+          case user:
+            Parse.User.become(sessionToken).then(
+              function(user) {
+                user.logIn();
+                this.setState = ({ user: user, loggedIn: true  });
+              },
+              function(error) {
+                console.log('couldnt log user');
+              }
+            );
+            break;
+
+          default:
+            this.props.navigation.navigate('SignUp');
+            break;
+        }
+      }.bind(this)
+    );
   }
 
-  componentDidMount() {
-
-  }
-
-
+  componentDidMount() {}
 
   async logInUser() {
     Parse.User.logIn(this.state.email, this.state.password, {
       success: function(user) {
         // Do stuff after successful login.
-        console.log(user, "user is here");
-        alert("success")
+        console.log(user, 'user is here');
+        alert('success');
       },
       error: function(user, error) {
         // The login failed. Check error to see why.
-        alert(error)
+        alert(error);
       }
     });
   }
 
   render() {
-    const {isRegistered} = this.state
+    const { isRegistered, loggedIn } = this.state;
     return (
       <Container style={styles.container}>
-
         <Form>
           <Item floatingLabel>
             <Label>Email</Label>
-            <Input autoCapitalize="none" autoCorrect={false} onChangeText={email => this.setState({ email })} />
+            <Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={email => this.setState({ email })}
+            />
           </Item>
 
           <Item floatingLabel>
@@ -79,9 +95,13 @@ export default class LoginScreen extends Component {
             <Text>Login</Text>
           </Button>
 
-          <Button style={styles.registerButton} transparent onPress={() =>  this.props.navigation.navigate('SignUp')}>
-          <Text>Register</Text>
-        </Button>
+          <Button
+            style={styles.registerButton}
+            transparent
+            onPress={() => this.props.navigation.navigate('SignUp')}
+          >
+            <Text>Register</Text>
+          </Button>
         </Form>
 
         <Text>{this.state.password}</Text>
@@ -101,6 +121,8 @@ const styles = StyleSheet.create({
     margin: 10
   },
   registerButton: {
-    alignSelf: 'flex-end',
+    alignSelf: 'flex-end'
   }
 });
+
+export default LoginScreen;
