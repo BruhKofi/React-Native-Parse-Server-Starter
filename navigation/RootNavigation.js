@@ -7,7 +7,6 @@ import AuthNavigation from './AuthNavigation';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 import { SwitchNavigator } from 'react-navigation';
 
-
 createRootNavigator = (signedIn = false) => {
   return SwitchNavigator(
     {
@@ -24,19 +23,18 @@ createRootNavigator = (signedIn = false) => {
     {
       navigationOptions: () => ({
         headerTitleStyle: {
-          fontWeight: 'normal',
-        },
-      }),
+          fontWeight: 'normal'
+        }
+      })
     }
-  )
-}
-
-
+  );
+};
 
 export default class RootNavigator extends React.Component {
-    state = {
-      signedIn: false
-    }
+  state = {
+    signedIn: false,
+    user: null
+  };
 
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
@@ -48,8 +46,8 @@ export default class RootNavigator extends React.Component {
 
   render() {
     const { signedIn } = this.state;
-    const Layout = createRootNavigator(signedIn)
-    return <Layout/>;
+    const Layout = createRootNavigator(signedIn);
+    return <Layout />;
   }
 
   _registerForPushNotifications() {
@@ -60,10 +58,14 @@ export default class RootNavigator extends React.Component {
     registerForPushNotificationsAsync();
 
     // Watch for incoming notifications
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    this._notificationSubscription = Notifications.addListener(
+      this._handleNotification
+    );
   }
 
   _handleNotification = ({ origin, data }) => {
-    console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
+    console.log(
+      `Push notification ${origin} with data: ${JSON.stringify(data)}`
+    );
   };
 }

@@ -4,17 +4,35 @@ import { Container, Item, Label, Form, Input, Button, Text } from 'native-base';
 import Parse from 'parse/react-native'
 
 export default class LoginScreen extends Component {
-  componentWillMount() {
-    console.log('Auth screen mounted');
-  }
-
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
+      user: null,
     };
   }
+
+  componentWillMount() {
+    console.log('Auth screen mounted');
+
+      Parse.User.currentAsync().then(
+        function(user) {
+          const authstatus = user.authenticated();
+          const username = user.getUsername();
+          console.log(user, 'username',  authstatus)
+          user.logIn();
+          this.props.navigation.navigate('Home')
+          return user;
+        }.bind(this)
+      );
+  }
+
+  componentDidMount() {
+
+  }
+
+
 
   async logInUser() {
     Parse.User.logIn(this.state.email, this.state.password, {
