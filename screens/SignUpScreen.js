@@ -21,11 +21,15 @@ export default class AuthScreen extends Component {
 
   async signUpUser() {
     const user = new Parse.User();
-    user.set('username', this.state.email);
-    user.set('FirstName', this.state.FirstName);
-    user.set('LastName', this.state.LastName);
-    user.set('email', this.state.email);
-    user.set('password', this.state.password);
+
+    const {email, firstName, lastName, password} = this.state
+
+    if (email & firstName, lastName, password) {
+    user.set('username', email.toLowerCase());
+    user.set('FirstName', firstName);
+    user.set('LastName', lastName);
+    user.set('email', email.toLowerCase());
+    user.set('password', password);
 
     user.signUp(null, {
       success: function(user) {
@@ -37,6 +41,7 @@ export default class AuthScreen extends Component {
         alert('Error: ' + error.code + ' ' + error.message);
       }
     });
+  } else alert("Please fill out all fields")
   }
 
   render() {
@@ -105,7 +110,7 @@ export default class AuthScreen extends Component {
             </Button>
             </Form>
 
-            <Text>{this.state.password}</Text>
+            <Text>{this.state.email.toLowerCase()}</Text>
             </KeyboardAvoidingView>
             </Container>
     );
