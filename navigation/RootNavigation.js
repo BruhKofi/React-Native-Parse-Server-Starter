@@ -7,7 +7,7 @@ import AuthNavigation from './AuthNavigation';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 import { SwitchNavigator } from 'react-navigation';
 
-createRootNavigator = (signedIn = false) => {
+createRootNavigator = (signedIn = true) => {
   return SwitchNavigator(
     {
       Main: {

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { Container, Item, Label, Form, Input, Button, Text } from 'native-base';
+import { StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { Container, Content, Item, Label, Form, Input, Button, Text } from 'native-base';
 import Parse from 'parse/react-native';
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: '',
+      email: 'kofi@new.com',
+      password: 'pass',
       user: null,
       loggedIn: false
     };
@@ -47,25 +47,14 @@ class LoginScreen extends Component {
 
   componentDidMount() {}
 
-  async logInUser() {
-    Parse.User.logIn(this.state.email, this.state.password, {
-      success: function(user) {
-        // Do stuff after successful login.
-        console.log(user, 'user is here');
-        alert('success');
-      },
-      error: function(user, error) {
-        // The login failed. Check error to see why.
-        alert(error);
-      }
-    });
-  }
+
 
   render() {
     const { isRegistered, loggedIn } = this.state;
     return (
-      <Container style={styles.container}>
-        <Form>
+      <Content contentContainerStyle={styles.container}>
+      <KeyboardAvoidingView behavior='padding' style={styles.container}>
+        <Form style={styles.form}>
           <Item floatingLabel>
             <Label>Email</Label>
             <Input
@@ -100,14 +89,32 @@ class LoginScreen extends Component {
             transparent
             onPress={() => this.props.navigation.navigate('SignUp')}
           >
-            <Text>Register</Text>
+            <Text>Register!</Text>
           </Button>
         </Form>
 
         <Text>{this.state.password}</Text>
-      </Container>
+        </KeyboardAvoidingView>
+        </Content>
+
     );
   }
+
+  async logInUser() {
+    var that = this
+    Parse.User.logIn(this.state.email, this.state.password, {
+      success: function(user) {
+        // Do stuff after successful login.
+        console.log(user, 'user is here');
+        that.props.navigation.navigate('Main')
+      },
+      error: function(user, error) {
+        // The login failed. Check error to see why.
+        alert(error);
+      }
+    });
+  }
+
 }
 
 const styles = StyleSheet.create({
@@ -122,6 +129,10 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     alignSelf: 'flex-end'
+  },
+  form: {
+    // flex: 1,
+
   }
 });
 
