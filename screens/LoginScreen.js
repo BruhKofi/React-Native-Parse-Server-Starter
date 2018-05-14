@@ -54,7 +54,7 @@ class LoginScreen extends Component {
     return (
       <Content contentContainerStyle={styles.container}>
       <KeyboardAvoidingView behavior='padding' style={styles.container}>
-        <Form>
+        <Form style={styles.form}>
           <Item floatingLabel>
             <Label>Email</Label>
             <Input
@@ -129,6 +129,10 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     alignSelf: 'flex-end'
+  },
+  form: {
+    // flex: 1,
+
   }
 });
 
