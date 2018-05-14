@@ -11,8 +11,30 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+import {connect} from 'react-redux';
+import { watchUserData } from '../redux/app-redux'
 
-export default class HomeScreen extends React.Component {
+const mapStateToProps = state => {
+  return{
+    userData: state.userData
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    watchUserData: () => { dispatch(watchUserData()) }
+  }
+}
+
+class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+    this.props.watchUserData()
+  }
+
   static navigationOptions = {
     header: null,
   };
@@ -43,6 +65,7 @@ export default class HomeScreen extends React.Component {
 
             <Text style={styles.getStartedText}>
               Change this text and your app will automatically reload.
+              {this.props.userData.username}
             </Text>
           </View>
 
@@ -186,3 +209,5 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
